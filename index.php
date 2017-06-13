@@ -13,7 +13,6 @@ if(!isset($_GET['code']))
 else
 {
     $code = $_GET['code'];
-
 $apiData = array(
   'client_id'       => $client_id,
   'client_secret'   => $client_secret,
@@ -35,8 +34,16 @@ curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, false);
 $jsonData = curl_exec($ch);
 curl_close($ch);
 echo "<pre>";
-print_r($jsonData);
-echo '<pre>';
-exit;
+$array = json_decode($jsonData, true);
+echo $array['access_token'];
+echo "<br/>";
+$relationships = 'https://api.instagram.com/v1/users/self/followed-by?access_token='.$array['access_token'];
+$c = curl_init();
+curl_setopt($c, CURLOPT_URL, $relationships);
+curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);  
+curl_setopt($c,CURLOPT_SSL_VERIFYHOST, false);
+$data = curl_exec($c);
+curl_close($c);
+print_r($data);
 }
 ?>
